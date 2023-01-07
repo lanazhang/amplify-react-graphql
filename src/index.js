@@ -2,14 +2,16 @@ import React from 'react';
 import ReactDOM from 'react-dom/client';
 import './index.css';
 import App from './App';
+import Dashboard from './dashboard';
 import reportWebVitals from './reportWebVitals';
 import { Amplify } from 'aws-amplify';
 import config from './aws-exports';
 Amplify.configure(config);
 const root = ReactDOM.createRoot(document.getElementById('root'));
+const pathname = window.location.pathname;
 root.render(
   <React.StrictMode>
-    <App />
+    {pathname.toLowerCase().startsWith("/dashboard")? <Dashboard />: <App />}
   </React.StrictMode>
 );
 
