@@ -17,7 +17,7 @@ export const COLUMN_DEFINITIONS = addColumnSortLabels([
     sortingField: 'status',
     header: 'Status',
     cell: item => (
-      <StatusIndicator type={item.status === 'Completed' ? 'success' : item.status === 'Failed'? 'error': 'info' }>{item.status}</StatusIndicator>
+      <StatusIndicator type={item.status === 'COMPLETED' ? 'success' : item.status === 'FAILED'? 'error': 'info' }>{item.status}</StatusIndicator>
     ),
     minWidth: 120,
   },

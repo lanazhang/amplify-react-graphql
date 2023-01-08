@@ -42,8 +42,8 @@ export const navItems = [
 ];
 
 export const ec2NavItems = [
-  { type: 'link', text: 'Dashboard', href: '/dashboard' },
-  { type: 'link', text: 'Transcription Jobs', href: '/jobs' },
+  { type: 'link', text: 'Dashboard', href: 'dashboard' },
+  { type: 'link', text: 'Transcription Jobs', href: 'jobs' },
   { type: 'divider' },
   {
     type: 'link',

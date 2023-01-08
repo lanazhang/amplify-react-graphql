@@ -12,56 +12,91 @@ import { JobCreate } from './job-create';
 import { TableHeader } from './commons/common-components';
 import { SpaceBetween } from '@cloudscape-design/components';
 import { JobDetail } from './job-detail';
-import Cards from "@cloudscape-design/components/cards";
+import { API } from "aws-amplify";
 
 export default (onItemClick) => {
   const [items, setItems] = useState([
-    {
-      "name": "Test Transcribe job for Toxicity classification",
-      "status": "Completed",
-      "created": "Jan 5 2023, 16:41 (UTC-05:00)",
-      "language": "English, US (en-US)",
-      "expiration": "The transcription is available for 75 more days.",
-      "started": "2022-12-22, 4:41:33 p.m.",
-      "ended": "2022-12-22, 4:42:33 p.m.",
-      "avg_toxicity_score":"84.4%",
-      "format": "wav",
-      "rate": "22050 Hz",
-      "input_s3_uri": "s3://sagemaker-us-east-1-122702569249/content-moderation-im/audio-moderation/speech_20220922175040855.wav",
-      "output_s3_uri": "s3://sagemaker-us-east-1-122702569249/content-moderation-im/audio-moderation/transcribe-toxicity-modertion-job.json",
-      "toxicity": {"toxicityDetection":[{"text":"So many haters on the Internet. I didn't get what was so bad about this video. I think you're just jealous. Fuck human. Get ready to take this hard ass test. I'm tired of these bad ass kids. Damn, that's a shitload of guns.","toxicity":0.844,"categories":{"PROFANITY":0.9971,"HATE_SPEECH":0.0846,"SEXUAL":0.0103,"INSULT":0.7233,"VIOLENCE_OR_THREAT":0.0107,"GRAPHIC":0.0068,"HARASSMENT_OR_ABUSE":0.0696},"start_time":0,"end_time":13.56},{"text":"So many haters on the Internet. I didn't get what was so bad about this video. I think you're just jealous. Fuck human. Get ready to take this hard ass test. I'm tired of these bad ass kids. Damn, that's a shitload of guns.","toxicity":0.934,"categories":{"PROFANITY":0.9971,"HATE_SPEECH":0.0846,"SEXUAL":0.0103,"INSULT":0.7233,"VIOLENCE_OR_THREAT":0.0107,"GRAPHIC":0.0068,"HARASSMENT_OR_ABUSE":0.0696},"start_time":0,"end_time":13.56}]}
-    },
-    {
-      "name": "Test Transcribe job 2",
-      "status": "In Progress",
-      "created": "Jan 4 2023, 12:41 (UTC-05:00)"
-    },
-    {
-      "name": "Test Transcribe job 3",
-      "status": "Completed",
-      "created": "Jan 5 2023, 16:41 (UTC-05:00)"
-    },
-    {
-      "name": "Test Transcribe job 4",
-      "status": "Completed",
-      "created": "Jan 5 2023, 16:41 (UTC-05:00)"
-    },
-    {
-      "name": "Test Transcribe job 5",
-      "status": "Completed",
-      "created": "Jan 5 2023, 16:41 (UTC-05:00)"
-    },
-    {
-      "name": "Test Transcribe job 6",
-      "status": "Completed",
-      "created": "Jan 5 2023, 16:41 (UTC-05:00)"
-    },
-    {
-      "name": "Test Transcribe job 7",
-      "status": "Failed",
-      "created": "Jan 5 2023, 16:41 (UTC-05:00)"
-    }
-  ]);
+      {
+        "name": "toxicity-job-sample-audio-15",
+        "created": "2023-01-07 02:14:55 AM",
+        "status": "COMPLETED",
+        "started": "2023-01-07 02:14:55 AM",
+        "ended": "2023-01-07 02:15:17 AM",
+        "language": "en-US"
+      },
+      {
+        "name": "toxicity-job-sample-audio-14",
+        "created": "2023-01-07 02:14:46 AM",
+        "status": "COMPLETED",
+        "started": "2023-01-07 02:14:46 AM",
+        "ended": "2023-01-07 02:15:01 AM",
+        "language": "en-US"
+      },
+      {
+        "name": "toxicity-job-sample-audio-12",
+        "created": "2023-01-07 02:14:35 AM",
+        "status": "COMPLETED",
+        "started": "2023-01-07 02:14:35 AM",
+        "ended": "2023-01-07 02:14:54 AM",
+        "language": "en-US"
+      },
+      {
+        "name": "toxicity-job-sample-audio-11",
+        "created": "2023-01-07 02:14:25 AM",
+        "status": "COMPLETED",
+        "started": "2023-01-07 02:14:25 AM",
+        "ended": "2023-01-07 02:15:12 AM",
+        "language": "en-US"
+      },
+      {
+        "name": "toxicity-job-sample-audio-10",
+        "created": "2023-01-07 02:14:15 AM",
+        "status": "COMPLETED",
+        "started": "2023-01-07 02:14:15 AM",
+        "ended": "2023-01-07 02:14:32 AM",
+        "language": "en-US"
+      },
+      {
+        "name": "toxicity-job-sample-audio-9",
+        "created": "2023-01-07 02:14:01 AM",
+        "status": "COMPLETED",
+        "started": "2023-01-07 02:14:01 AM",
+        "ended": "2023-01-07 02:14:21 AM",
+        "language": "en-US"
+      },
+      {
+        "name": "toxicity-job-sample-audio-8",
+        "created": "2023-01-07 02:13:47 AM",
+        "status": "COMPLETED",
+        "started": "2023-01-07 02:13:47 AM",
+        "ended": "2023-01-07 02:14:42 AM",
+        "language": "en-US"
+      },
+      {
+        "name": "toxicity-job-sample-audio-7",
+        "created": "2023-01-07 02:10:34 AM",
+        "status": "COMPLETED",
+        "started": "2023-01-07 02:10:34 AM",
+        "ended": "2023-01-07 02:10:53 AM",
+        "language": "en-US"
+      },
+      {
+        "name": "toxicity-job-sample-audio-4",
+        "created": "2023-01-07 02:10:22 AM",
+        "status": "COMPLETED",
+        "started": "2023-01-07 02:10:22 AM",
+        "ended": "2023-01-07 02:11:06 AM",
+        "language": "en-US"
+      },
+      {
+        "name": "toxicity-job-sample-audio-1",
+        "created": "2023-01-07 02:09:30 AM",
+        "status": "COMPLETED",
+        "started": "2023-01-07 02:09:30 AM",
+        "ended": "2023-01-07 02:10:49 AM",
+        "language": "en-US"
+      }
+    ]);
 
   const [ selectedItems, setSelectedItems ] = useState([]);
   const [preferences, setPreferences] = useLocalStorage('React-DistributionsTable-Preferences', DEFAULT_PREFERENCES);
@@ -89,7 +124,7 @@ export default (onItemClick) => {
     return (
       <div> <br/>
       {showCreate?<JobCreate onDismiss={handleCloseCreate}/>:<div/>}
-      {showDetail?<JobDetail job={selectedItems[0]} onBack={handleBackToList} />:
+      {showDetail?<JobDetail job={selectedItems[0].name} onBack={handleBackToList} />:
         <Table
         onSelectionChange={({ detail }) =>
           setSelectedItems(detail.selectedItems)

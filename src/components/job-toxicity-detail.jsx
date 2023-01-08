@@ -1,4 +1,4 @@
-import React, { useState, useEffect } from 'react';
+import React, { useState, useEffect, useRef } from 'react';
 import {
   Alert,
   AppLayout,
@@ -17,9 +17,8 @@ import {
   SpaceBetween,
 } from '@cloudscape-design/components';
 import BarChart from "@cloudscape-design/components/bar-chart";
-import audio from '../static/sample_audio_01.wav'
 
-function JobToxicityDetail ({segment, onDismiss}) {
+function JobToxicityDetail ({segment, inputUrl, onDismiss}) {
 
     return (<Modal
       visible={true}
@@ -38,15 +37,6 @@ function JobToxicityDetail ({segment, onDismiss}) {
         <Box variant="awsui-key-label">Transcribed text</Box>
         <Box variant="div">{segment.text}</Box>
       </SpaceBetween>  
-      <SpaceBetween size="l">
-        <Box variant="awsui-key-label">Play the audio segment</Box>
-        <Box variant="div">
-          <audio controls currentTime={segment.start_time}>
-            <source src={audio} type="audio/wav" />
-          Your browser does not support the audio element.
-          </audio>
-        </Box>
-      </SpaceBetween>
       {segment.toxicity >= 0.5?
       <SpaceBetween size="l">
         <BarChart

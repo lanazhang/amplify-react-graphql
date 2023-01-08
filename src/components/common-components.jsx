@@ -2,11 +2,10 @@
 // SPDX-License-Identifier: MIT-0
 import React from 'react';
 import { BreadcrumbGroup, Button, HelpPanel, Icon, SpaceBetween } from '@cloudscape-design/components';
-import { jobListBreadcrumbs } from '../common/breadcrumbs';
 import { ExternalLinkItem, TableHeader } from './commons/common-components';
 
-export const Breadcrumbs = () => (
-  <BreadcrumbGroup items={jobListBreadcrumbs} expandAriaLabel="Show path" ariaLabel="Breadcrumbs" />
+export const Breadcrumbs = (items) => (
+  <BreadcrumbGroup items={items} expandAriaLabel="Show path" ariaLabel="Breadcrumbs" />
 );
 
 export const FullPageHeader = ({

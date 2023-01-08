@@ -1,21 +1,22 @@
 import { useState, useRef } from "react";
 import Header from "@cloudscape-design/components/header";
-import Container from "@cloudscape-design/components/container";
-import SpaceBetween from "@cloudscape-design/components/space-between";
 import * as React from "react";
-import Link from "@cloudscape-design/components/link";
 import Alert from "@cloudscape-design/components/alert";
 import {withAuthenticator} from "@aws-amplify/ui-react";
 import "@aws-amplify/ui-react/styles.css";
-import {Navigation,ec2NavItems, Notifications} from './components/commons/common-components';
+import {Navigation, Notifications} from './components/commons/common-components';
 import { AppLayout } from '@cloudscape-design/components';
 import { EC2ToolsContent, Breadcrumbs } from './components/common-components';
 import JobList from "./components/job-list";
 import TopNavigation from "@cloudscape-design/components/top-navigation";
 import logo from './static/aws_logo.png'
+import Report from "./components/report";
+import { BreadcrumbGroup, Link, SpaceBetween } from '@cloudscape-design/components';
 
-const App = ({ signOut }) => {
-  const [alert, setAlert] = useState("This is a generic alert");
+const App = ({ signOut, user }) => {
+  const [currentPage, setCurrentPage] = useState("dashboard");
+  const [activeNavHref, setActiveNavHref] = useState("#/dashboard");
+  const [currentBreadcrumb, setCurrentBreadcrumb] = useState([{ "type": 'label', "text": 'Home'}, {"id":"dashboard", "text": 'Dashboard', "href": '#/dashboard', }]);
   const appLayout = useRef();
 
   const [selectedItems, setSelectedItems] = useState([]); 
@@ -25,13 +26,20 @@ const App = ({ signOut }) => {
   }
 
   const onSelectionChange = event => {
-    alert(event.selectedItems);
     setSelectedItems(event.selectedItems);
   }
 
+  const handleHavItemClick = e => {
+    setCurrentPage(e.detail.id);
+    setActiveNavHref(e.detail.href);
+    if (e.detail.id === "dashboard")
+      setCurrentBreadcrumb([{ "type": 'label', "text": 'Home'}, {"id":"dashboard", "text": 'Dashboard', "href": '#/dashboard', }]);
+    else
+      setCurrentBreadcrumb([{ "type": 'label', "text": 'Home'}, {"id":"dashboard", "text": 'Transcription Jobs', "href": '#/jobs', }]);
+  }
     return (
       <div>
-      <TopNavigation
+      <TopNavigation      
       identity={{
         href: "#",
         title: "AWS Content Moderation Demo",
@@ -43,11 +51,12 @@ const App = ({ signOut }) => {
       utilities={[
         {
           type: "menu-dropdown",
-          text: "Customer Name",
-          description: "email@example.com",
+          text: user.username,
+          description: user.email,
           iconName: "user-profile",
+          onItemClick: signOut,
           items: [
-            { id: "signout", text: "Sign out" }
+            { type: "button", id: "signout", text: "Sign out"}
           ]
         }
       ]}
@@ -64,8 +73,27 @@ const App = ({ signOut }) => {
       headerSelector="#header"
       ref={appLayout}
       contentType="table"
-      navigation={<Navigation items={ec2NavItems} activeHref="#/jobs" />}
-      breadcrumbs={<Breadcrumbs />}
+      navigation={
+      <Navigation 
+        onFollowHandler={handleHavItemClick}
+        selectedItems={["dasboard"]}
+        activeHref={activeNavHref}
+        items={
+        [
+          { type: 'link', id:"dashboard", text: 'Dashboard', href:"#/dashboard" },
+          { type: 'link', id:"jobs", text: 'Transcription Jobs', href:"#/jobs" },
+          { type: 'divider' },
+          {
+            type: 'link', text: 'Documentation', external: true, href: '#/documentation',
+          },
+        ]
+      } 
+      />}
+      breadcrumbs={
+        <BreadcrumbGroup 
+          items={currentBreadcrumb}
+        />
+      }
       tools={<EC2ToolsContent />}
       header={
         <SpaceBetween size="l">
@@ -80,7 +108,7 @@ const App = ({ signOut }) => {
           { alert !== null && alert.length > 0?<Alert>{alert}</Alert>:<div/>}
         </SpaceBetween>
       }
-      content={< JobList onItemClick={handleItemClick} onSelectionChange={onSelectionChange}/>}
+      content={currentPage === "jobs"?< JobList onItemClick={handleItemClick} onSelectionChange={onSelectionChange}/>:< Report />}
     >
     </AppLayout>
     </div>
