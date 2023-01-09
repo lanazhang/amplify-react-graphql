@@ -1,4 +1,4 @@
-import { useState, useRef } from "react";
+import { useState, useEffect } from "react";
 import * as React from "react";
 import Table from "@cloudscape-design/components/table";
 import Box from "@cloudscape-design/components/box";
@@ -12,99 +12,43 @@ import { JobCreate } from './job-create';
 import { TableHeader } from './commons/common-components';
 import { SpaceBetween } from '@cloudscape-design/components';
 import { JobDetail } from './job-detail';
-import { API } from "aws-amplify";
 
 export default (onItemClick) => {
-  const [items, setItems] = useState([
-      {
-        "name": "toxicity-job-sample-audio-15",
-        "created": "2023-01-07 02:14:55 AM",
-        "status": "COMPLETED",
-        "started": "2023-01-07 02:14:55 AM",
-        "ended": "2023-01-07 02:15:17 AM",
-        "language": "en-US"
-      },
-      {
-        "name": "toxicity-job-sample-audio-14",
-        "created": "2023-01-07 02:14:46 AM",
-        "status": "COMPLETED",
-        "started": "2023-01-07 02:14:46 AM",
-        "ended": "2023-01-07 02:15:01 AM",
-        "language": "en-US"
-      },
-      {
-        "name": "toxicity-job-sample-audio-12",
-        "created": "2023-01-07 02:14:35 AM",
-        "status": "COMPLETED",
-        "started": "2023-01-07 02:14:35 AM",
-        "ended": "2023-01-07 02:14:54 AM",
-        "language": "en-US"
-      },
-      {
-        "name": "toxicity-job-sample-audio-11",
-        "created": "2023-01-07 02:14:25 AM",
-        "status": "COMPLETED",
-        "started": "2023-01-07 02:14:25 AM",
-        "ended": "2023-01-07 02:15:12 AM",
-        "language": "en-US"
-      },
-      {
-        "name": "toxicity-job-sample-audio-10",
-        "created": "2023-01-07 02:14:15 AM",
-        "status": "COMPLETED",
-        "started": "2023-01-07 02:14:15 AM",
-        "ended": "2023-01-07 02:14:32 AM",
-        "language": "en-US"
-      },
-      {
-        "name": "toxicity-job-sample-audio-9",
-        "created": "2023-01-07 02:14:01 AM",
-        "status": "COMPLETED",
-        "started": "2023-01-07 02:14:01 AM",
-        "ended": "2023-01-07 02:14:21 AM",
-        "language": "en-US"
-      },
-      {
-        "name": "toxicity-job-sample-audio-8",
-        "created": "2023-01-07 02:13:47 AM",
-        "status": "COMPLETED",
-        "started": "2023-01-07 02:13:47 AM",
-        "ended": "2023-01-07 02:14:42 AM",
-        "language": "en-US"
-      },
-      {
-        "name": "toxicity-job-sample-audio-7",
-        "created": "2023-01-07 02:10:34 AM",
-        "status": "COMPLETED",
-        "started": "2023-01-07 02:10:34 AM",
-        "ended": "2023-01-07 02:10:53 AM",
-        "language": "en-US"
-      },
-      {
-        "name": "toxicity-job-sample-audio-4",
-        "created": "2023-01-07 02:10:22 AM",
-        "status": "COMPLETED",
-        "started": "2023-01-07 02:10:22 AM",
-        "ended": "2023-01-07 02:11:06 AM",
-        "language": "en-US"
-      },
-      {
-        "name": "toxicity-job-sample-audio-1",
-        "created": "2023-01-07 02:09:30 AM",
-        "status": "COMPLETED",
-        "started": "2023-01-07 02:09:30 AM",
-        "ended": "2023-01-07 02:10:49 AM",
-        "language": "en-US"
-      }
-    ]);
+  const AUDIO_SERVICE_URL = process.env.REACT_APP_AUDIO_SERVICE_URL;
+  const API_KEY = process.env.REACT_APP_API_KEY;
 
-  const [ selectedItems, setSelectedItems ] = useState([]);
+  const [items, setItems] = useState([]);
+
+  const [selectedItems, setSelectedItems ] = useState([]);
+  const [loadedFlag, setLoadedFlag ] = useState(false);
   const [preferences, setPreferences] = useLocalStorage('React-DistributionsTable-Preferences', DEFAULT_PREFERENCES);
   const [columnDefinitions, saveWidths] = useColumnWidths('React-Table-Widths', COLUMN_DEFINITIONS);
-  const appLayout = useRef();
 
   const [showCreate, setShowCreate] = useState(false); 
   const [showDetail, setShowDetail] = useState(false); 
+
+  useEffect(() => {
+    if (items.length === 0 && !loadedFlag) {
+      fetch(AUDIO_SERVICE_URL + 'jobs', {
+        method: 'POST',
+        headers: {
+           'Content-type': 'application/json; charset=UTF-8',
+           'x-api-key': API_KEY
+        },
+        })
+        .then((response) => response.json())
+        .then((data) => {
+            var resp = JSON.parse(data.body)
+            setItems(resp);
+            setLoadedFlag(true);
+        })
+        .catch((err) => {
+          setLoadedFlag(true);
+          console.log(err.message);
+        });
+
+    }
+  })
 
   const handleCreate = event => {
     setShowCreate(true);
@@ -123,8 +67,8 @@ export default (onItemClick) => {
 
     return (
       <div> <br/>
-      {showCreate?<JobCreate onDismiss={handleCloseCreate}/>:<div/>}
-      {showDetail?<JobDetail job={selectedItems[0].name} onBack={handleBackToList} />:
+      {showCreate?<JobCreate jobNames={items.map(i=>i.name)} onDismiss={handleCloseCreate}/>:<div/>}
+      {showDetail?<JobDetail jobName={selectedItems[0].name} onBack={handleBackToList} />:
         <Table
         onSelectionChange={({ detail }) =>
           setSelectedItems(detail.selectedItems)

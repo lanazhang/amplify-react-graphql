@@ -1,4 +1,5 @@
 {
+  "homepage": ".",
   "name": "amplifyapp",
   "version": "0.1.0",
   "private": true,
@@ -19,6 +20,7 @@
   "scripts": {
     "start": "react-scripts start",
     "build": "react-scripts build",
+    "deploy": "react-scripts build;aws s3 sync build/ s3://wwso-cm-demo/transcribe-demo-web/",
     "test": "react-scripts test",
     "eject": "react-scripts eject"
   },

@@ -81,7 +81,7 @@ export default () => {
    const Summary = () => (
     <ColumnLayout columns={4} variant="text-grid">
       <SpaceBetween size="l">
-          <Box variant="awsui-key-label">Total #s of audios</Box>
+          <Box variant="awsui-key-label">Total numbers of audios</Box>
           <CounterLink>{report.summary.total_audio.toLocaleString('en-US')}</CounterLink>
       </SpaceBetween>
       <SpaceBetween size="l">
@@ -118,7 +118,7 @@ export default () => {
           { key: "Last update on", value: datum.lastUpdate }
         ]}
         segmentDescription={(datum, sum) =>
-          `${datum.value} units, ${(
+          `${datum.value} audios, ${(
             (datum.value / sum) *
             100
           ).toFixed(0)}%`
@@ -165,7 +165,7 @@ export default () => {
     return <LineChart
       series={[
         {
-          title: "#s of audios",
+          title: "Numbers of audios",
           type: "line",
           data: [
             { x: new Date(1601006400000), y: 110 },
@@ -216,7 +216,7 @@ export default () => {
           }
         },
         {
-          title: "#s of toxic audios",
+          title: "Numbers of toxic audios",
           type: "line",
           data: [
             { x: new Date(1601006400000), y: 13 },
@@ -294,13 +294,13 @@ export default () => {
           return e.toFixed(0);
         }
       }}
-      ariaLabel="#s of audios over time"
+      ariaLabel="Numbers of audios over time"
       errorText="Error loading data."
       height={200}
       loadingText="Loading chart"
       recoveryText="Retry"
       xScaleType="time"
-      yTitle="#s of audios"
+      yTitle="Numbers of audios"
       empty={
         <Box textAlign="center" color="inherit">
           <b>No data available</b>
@@ -330,7 +330,7 @@ export default () => {
           height={300}
           series={[
             {
-              title: "#s of toxic audios",
+              title: "Numbers of toxic audios",
               type: "bar",
               data: report.top_gamers,
               valueFormatter: e => e
@@ -352,7 +352,7 @@ export default () => {
           recoveryText="Retry"
           xScaleType="categorical"
           xTitle="Toxicity category"
-          yTitle="#s of audios"
+          yTitle="Numbers of audios"
           empty={
             <Box textAlign="center" color="inherit">
               <b>No data available</b>
@@ -384,7 +384,7 @@ export default () => {
             <Header
               variant="h2"
               info={''}
-              description={'Transcribe toxicity analysis overviee'}>
+              description={'Transcribe toxicity analysis overview'}>
               Analysis overview
             </Header>
             <Box float="right">
@@ -412,7 +412,7 @@ export default () => {
           header={
             <Header
               variant="h2">
-              #s of audios over time
+              Numbers of audios over time
             </Header>
           }>
           <SpaceBetween size="l">

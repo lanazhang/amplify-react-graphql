@@ -1,21 +1,5 @@
 import React, { useState, useEffect, useRef } from 'react';
-import {
-  Alert,
-  AppLayout,
-  Box,
-  BreadcrumbGroup,
-  Button,
-  ColumnLayout,
-  Container,
-  ContentLayout,
-  Flashbar,
-  FormField,
-  Header,
-  Input,
-  Link,
-  Modal,
-  SpaceBetween,
-} from '@cloudscape-design/components';
+import {Box, Button, ColumnLayout, Modal, SpaceBetween,} from '@cloudscape-design/components';
 import BarChart from "@cloudscape-design/components/bar-chart";
 
 function JobToxicityDetail ({segment, inputUrl, onDismiss}) {
