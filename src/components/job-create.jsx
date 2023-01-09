@@ -12,27 +12,26 @@ function readFileDataAsBase64(e) {
 
       reader.onload = (event) => {
           resolve(event.target.result);
-      };
+        };
 
       reader.onerror = (err) => {
           reject(err);
       };
 
-      reader.readAsDataURL(file);
+      reader.readAsBinaryString(file);
   });
 }
 
 function JobCreate ({jobNames, onDismiss}) {
-  const AUTH_SERVICE_URL = process.env.REACT_APP_AUTH_SERVICE_URL;
+  const AUDIO_SERVICE_URL = process.env.REACT_APP_AUDIO_SERVICE_URL;
   const API_KEY = process.env.REACT_APP_API_KEY;
 
-  const [preSignedUrl, setPreSignedUrl] = useState(null);
   const [jobName, setJobName] = useState("");
   const [fileBytes, setFileBytes] = useState(undefined);
+  const [fileType, setFileType] = useState(null);
   const [message, setMessage] = useState(null);
 
   const handleSubmit = e => {
-    console.log(e.target);
     if (jobName === "")
       setMessage("Job name cannot be empty");
     else if (jobNames.includes(jobName))
@@ -40,53 +39,43 @@ function JobCreate ({jobNames, onDismiss}) {
     else if(fileBytes === undefined)
       setMessage("Please select a file");
     else {
-      const s3Client = new S3Client({ 
-        region: REGION, 
-        accessKeyId: preSignedUrl.fields.AWSAccessKeyId,
-        secretAccessKey: preSignedUrl.fields["x-amz-security-token"]
-      });
-      try {
-        const data = s3Client.send(
-          new PutObjectCommand({
-            Bucket: preSignedUrl["fields"]["bucket"],
-            Key: preSignedUrl["fields"]["key"],
-            Body: fileBytes
-          })
-        );
-        return data; // For unit tests.
-      } catch (err) {
-        console.log("Error putting object", err);
-      }
-    }
-
-  }
-
-  const handleFileChange = e => {
-    if (e.target.files) {
-      setFileBytes(readFileDataAsBase64(e));
-
-      if (jobName.length === 0) setJobName(e.target.files[0].name.split('.')[0]);
-      // Get pre-signed URL
-      fetch(AUTH_SERVICE_URL + 's3/pre-signed-url', {
-        method: 'POST',
-        body: JSON.stringify({
-          file_name: jobName + e.target.files[0].name.split('.')[1]
-         }),
+      console.log(fileBytes);
+       fetch(AUDIO_SERVICE_URL + 'job', {
+        method: 'PUT',
+        body: JSON.stringify(
+           {
+               "Audio": {
+                   "BytesBase64": fileBytes
+               },
+               "FileName": jobName
+           }
+        ),
         headers: {
-           'Content-type': 'application/json; charset=UTF-8',
+           'Content-type': fileType,
            'x-api-key': API_KEY
         },
         })
         .then((response) => response.json())
         .then((data) => {
-            var resp = JSON.parse(data.body)
-            setPreSignedUrl(resp);
+            var resp = JSON.parse(data.body);
+            onDismiss(e);
         })
         .catch((err) => {
-          console.log(err.message);
+           console.log(err.message);
+           setMessage("Failed to upload audio file:" + err.message);
         });
-    
+
     }
+
+  }
+
+  const handleFileChange = async e => {
+    const FR = new FileReader();
+    FR.addEventListener("load", function(evt) {
+      setFileBytes(evt.target.result.split('base64,')[1]);
+      setFileType(e.target.files[0].type)
+    }); 
+    FR.readAsDataURL(e.target.files[0]);
   }
 
   const handleJobNameChange = e => {
